@@ -1,6 +1,6 @@
 import {Dimensions, StyleSheet} from 'react-native';
 
-const CIRCLE_RADIUS = 30;
+
 let Window = Dimensions.get('window');
 const styles = StyleSheet.create({
   mainContainer: {
@@ -54,12 +54,11 @@ const styles = StyleSheet.create({
   draggableContainer: {
     position    : 'absolute',
     bottom: -500,
-    left: Window.width/2 - CIRCLE_RADIUS,
+    left: Window.width/2 - 30,
+  
   },
   circle      : {
-    backgroundColor     : '#1abc9c',
-    width               : CIRCLE_RADIUS*2,
-    height              : CIRCLE_RADIUS*2,
+    backgroundColor     : 'red',
   },
   trash: {
     height: 150,
