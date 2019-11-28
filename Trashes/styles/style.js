@@ -3,10 +3,7 @@ import {Dimensions, StyleSheet} from 'react-native';
 
 let Window = Dimensions.get('window');
 const styles = StyleSheet.create({
-  mainContainer: {
 
-    flex: 1,
-  },
   filler: {
     height: 25,
     backgroundColor: 'black'
@@ -15,7 +12,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 80,
-    backgroundColor: 'orange'
   },
   dropZone    : {
     height  : 100,
@@ -26,7 +22,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 300,
-    backgroundColor: '#D5D5D5',
   },
   bins__wrapper: {
     alignItems: 'center',
@@ -41,7 +36,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 5,
-    backgroundColor: '#C5C4C4',
     margin: 15,
     width: 80,
     height: 120,
@@ -62,36 +56,71 @@ const styles = StyleSheet.create({
   },
   draggableContainer: {
     position    : 'absolute',
-    bottom: -500,
-    left: Window.width/2 - 35,
+    bottom: 135,
+    left: Window.width/2 - 40,
   
   },
   circle      : {
+    width: 90,
+    height: 90
+ 
+  },
+  icon: {
+    height: 90,
+    width: 90
+  },
+  place: {
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor     : '#454545',
-    borderRadius: 10,
-    width: 70,
-    height: 70
+    flexDirection: 'row'
   },
-  icon        : {
-    color       : 'white',
-  },
-
   trash: {
     alignItems: 'center',
     justifyContent: 'flex-end',
     height: 150,
-    backgroundColor: 'blue'
+    borderWidth: 1,
+    borderColor: 'white',
+    borderStyle:'solid',
+    width: '40%',
+    borderRadius: 7
+
+  },
+  trashimage: {
+    width: 80,
+    height: 120
   },
   trash_name: {
     borderRadius: 3,
-    width: '40%',
+ 
     textAlign: 'center',
     backgroundColor: 'white',
     color: '#454545',
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 15,
+    paddingLeft: 5,
+    paddingRight: 5
+  },
+  good: {
+    borderRadius: 3,
+   
+    textAlign: 'center',
+    backgroundColor: 'green',
+    color: 'white',
+    fontWeight: 'bold',
+    marginBottom: 15,
+    paddingLeft: 5,
+    paddingRight: 5
+  },
+  
+  bed: {
+    borderRadius: 3,
+
+    textAlign: 'center',
+    backgroundColor: 'red',
+    color: 'white',
+    fontWeight: 'bold',
+    marginBottom: 15,
+    paddingLeft: 5,
+    paddingRight: 5
   },
   scores: {
     margin: 5,
@@ -101,7 +130,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'grey',
     width: 350,
     height: 60,
-    color: 'white'
+    
+    opacity: 0.5
   },
   
   summary: {

@@ -89,7 +89,7 @@ export default class Viewport extends Component {
       showDraggable: false,
       index: this.state.index + 1,
       points: this.state.points + 1,
-      info: 'dobrze'
+      info: 'DOBRZE !'
     });
   }
   
@@ -97,7 +97,7 @@ export default class Viewport extends Component {
     this.setState({
       showDraggable: false,
       index: this.state.index + 1,
-      info: 'źle'
+      info: 'ŹLE'
     });
   }
   
@@ -161,80 +161,79 @@ export default class Viewport extends Component {
     if(this.state.showDraggable) {
       return (<Text style={styles.trash_name}>{trashesList[this.state.index].name}</Text>);
     } else {
-      return null;
+      return (<Text style={(this.state.info === 'DOBRZE !') ? styles.good : styles.bed}>{this.state.info}</Text>)
     }
   }
   render() {
   
     if (this.state.index < trashesList.length) {
-      return (
-      <View style={styles.mainContainer}>
+      return (<>
+      <View>
+        <ImageBackground source={require('./img/background.jpg')} style={{width: '100%', height: '100%'}}>
         <View style={styles.filler}/>
         <View style={styles.logo}>
-          <Text>Ttle {this.state.info}</Text>
-      
+          <Image source={require('./img/logo.jpg')} style={{width: 350, height: 70}}/>
           </View>
         <View style={styles.bins}>
           <View style={styles.bins__wrapper}>
             
             <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_1')}>
-              <Icon name="trash" size={85} color="#FFB620" />
-              <Text style={styles.bin_name}>metale i tworzywa sztuczne</Text>
+              <ImageBackground source={require('./img/bins/bin_1.png')} style={styles.trashimage}/>
             </View>
             <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_2')}>
-              <Icon name="trash" size={85} color="#4FAD2F" />
-              <Text style={styles.bin_name}>szkło</Text>
+              <ImageBackground source={require('./img/bins/bin_2.png')} style={styles.trashimage}/>
+              
             </View>
             <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_3')}>
-              <Icon name="trash" size={85} color="#0073CE" />
-              <Text style={styles.bin_name}>papier</Text>
+              <ImageBackground source={require('./img/bins/bin_3.png')} style={styles.trashimage}/>
+         
             </View>
             <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_4')}>
-              <Icon name="trash" size={85} color="#9B5F36" />
-              <Text style={styles.bin_name}>bio</Text>
+              <ImageBackground source={require('./img/bins/bin_4.png')} style={styles.trashimage}/>
+             
             </View>
             <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_5')}>
-              <Icon name="trash" size={85} color="#222222" />
-              <Text style={styles.bin_name}>zmieszane</Text>
+              <ImageBackground source={require('./img/bins/bin_5.png')} style={styles.trashimage}/>
+            
             </View>
             <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_6')}>
-              <Icon name="trash" size={85} color="#FF661C" />
-              <Text style={styles.bin_name}>inne (PSZOK, apteki)</Text>
+              <ImageBackground source={require('./img/bins/bin_6.png')} style={styles.trashimage}/>
             </View>
-            
-          
-
           </View>
         </View>
-        <View style={styles.trash}>
-        {this.trashName()}
-        </View>
-
+          <View style={styles.place}>
+            <View></View>
+            <View style={styles.trash}>
+              {this.trashName()}
+            </View>
+            <View></View>
+          </View>
+       
         
        
           <View style={styles.scores}>
             <Text>punkty: {this.state.points} pozostało: {trashesList.length - this.state.index} pytań
-             s: {this.state.summaryArr.map(el=> {return el})} i:  s: {this.state.summaryBin.map(el=> {return el})}
+             {/*s: {this.state.summaryArr.map(el=> {return el})} i:  s: {this.state.summaryBin.map(el=> {return el})}*/}
             </Text>
             
           </View>
           
      
         {/*<View style={{width: `${(100/trashesList.length)*(this.state.index)}%`, height: 20, backgroundColor: 'red'}}></View>*/}
-  
-        
-        {this.renderTrash()}
-
+        </ImageBackground>
+    
       </View>
+        {this.renderTrash()}
+        </>
       );
     } else {
       const tableHead = ['śmieć', 'do', 'dob/zle', 'pkt', 'popr'];
-      const inflection= ['metali i tworzyw', 'szkła', 'papieru', 'bio', 'mieszanych', 'innych'];
+      const inflectionBin= ['metali i tworzyw', 'szkła', 'papieru', 'bio', 'mieszanych', 'innych'];
       const tableData = [];
       
       const {info, points, summaryBin, summaryArr} = this.state;
         for (let i = 0; i < trashesList.length; i++) {
-          tableData.push([inflection[summaryBin[i]], (summaryArr[i] ==='1')? 'dobrze' : 'źle', (summaryArr[i] ==='1')? '1' : '0', (summaryArr[i] ==='1')? ' ' : trashesList[i].target]);
+          tableData.push([inflectionBin[summaryBin[i]], (summaryArr[i] ==='1')? 'dobrze' : 'źle', (summaryArr[i] ==='1')? '1' : '0', (summaryArr[i] ==='1')? ' ' : trashesList[i].target]);
         }
         
       return(<>
@@ -273,7 +272,8 @@ export default class Viewport extends Component {
         <Animated.View
         {...this.panResponder.panHandlers}
         style={[this.state.pan.getLayout(), styles.circle]}>
-          <Icon name={trashesList[this.state.index].icon} size={40} style={styles.icon}/>
+          <ImageBackground source={require('./img/trash_1.png')} style={styles.icon}/>
+          {/*<Image source={require('./img/trash_1.png')} style={styles.icon}/>*/}
         </Animated.View>
       </View>
       )
