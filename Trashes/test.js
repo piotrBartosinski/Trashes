@@ -1,10 +1,13 @@
 import {
   Text,
   View,
+  Image,
+  ImageBackground,
   StyleSheet,
   PanResponder,
   Animated,
   Button,
+
   TouchableOpacity,
   Dimensions,
 } from "react-native";
@@ -12,6 +15,11 @@ import {
 import React, {Component} from "react";
 import styles from './styles/style.js';
 import trashesList from './trashes_list';
+import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
+
+import Icon from 'react-native-vector-icons/FontAwesome5';
+// import Icon from 'react-native-vector-icons/MaterialIcons';
+// import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 export default class Viewport extends Component {
@@ -31,6 +39,8 @@ export default class Viewport extends Component {
       info: '',
       index: 0,
       result: [],
+      summaryArr: [],
+      summaryBin: [],
     };
     
     this.panResponder = PanResponder.create({
@@ -51,11 +61,19 @@ export default class Viewport extends Component {
             this.goodAnswer();
             this.animationReturn();
             this.showAgain();
+            this.setState({
+              summaryArr: this.state.summaryArr.concat('1'),
+              summaryBin: this.state.summaryBin.concat(i),
+            });
             
           } else if (dropzones[i]  && this.renderTrash().props.trashTarget !== bins[i]) {
             this.badAnswer();
             this.animationReturn();
             this.showAgain();
+            this.setState({
+              summaryArr: this.state.summaryArr.concat('0'),
+              summaryBin: this.state.summaryBin.concat(i),
+            })
             
           } else {
             Animated.spring(
@@ -139,46 +157,108 @@ export default class Viewport extends Component {
     });
   }
   
+  trashName() {
+    if(this.state.showDraggable) {
+      return (<Text style={styles.trash_name}>{trashesList[this.state.index].name}</Text>);
+    } else {
+      return null;
+    }
+  }
   render() {
+  
     if (this.state.index < trashesList.length) {
       return (
       <View style={styles.mainContainer}>
         <View style={styles.filler}/>
         <View style={styles.logo}>
-          <Text>Title {this.state.info}</Text></View>
+          <Text>Ttle {this.state.info}</Text>
+      
+          </View>
         <View style={styles.bins}>
           <View style={styles.bins__wrapper}>
-            <Text style={styles.category} onLayout={this.setDropZoneValues.bind(this, 'bin_1')}>1. Metale i tworzywa sztuczne</Text>
-            <Text style={styles.category} onLayout={this.setDropZoneValues.bind(this, 'bin_2')}>2d.Szkło</Text>
-            <Text style={styles.category} onLayout={this.setDropZoneValues.bind(this, 'bin_3')}>3.Papier</Text>
-            <Text style={styles.category} onLayout={this.setDropZoneValues.bind(this, 'bin_4')}>4.Bio</Text>
-            <Text style={styles.category} onLayout={this.setDropZoneValues.bind(this, 'bin_5')}>5.Zmieszane</Text>
-            <Text style={styles.category} onLayout={this.setDropZoneValues.bind(this, 'bin_6')}>6.Inne (PSZOK, apteki itp.)6</Text>
+            
+            <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_1')}>
+              <Icon name="trash" size={85} color="#FFB620" />
+              <Text style={styles.bin_name}>metale i tworzywa sztuczne</Text>
+            </View>
+            <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_2')}>
+              <Icon name="trash" size={85} color="#4FAD2F" />
+              <Text style={styles.bin_name}>szkło</Text>
+            </View>
+            <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_3')}>
+              <Icon name="trash" size={85} color="#0073CE" />
+              <Text style={styles.bin_name}>papier</Text>
+            </View>
+            <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_4')}>
+              <Icon name="trash" size={85} color="#9B5F36" />
+              <Text style={styles.bin_name}>bio</Text>
+            </View>
+            <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_5')}>
+              <Icon name="trash" size={85} color="#222222" />
+              <Text style={styles.bin_name}>zmieszane</Text>
+            </View>
+            <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_6')}>
+              <Icon name="trash" size={85} color="#FF661C" />
+              <Text style={styles.bin_name}>inne (PSZOK, apteki)</Text>
+            </View>
+            
+          
+
           </View>
         </View>
-        <View style={styles.trash}></View>
-        <View style={styles.scores}><Text>punkty: {this.state.points} index: {this.state.index}
-        result: {this.state.result}
-        </Text></View>
-        <View style={{width: `${(100/trashesList.length)*(this.state.index)}%`, height: 20, backgroundColor: 'red'}}></View>
-      
+        <View style={styles.trash}>
+        {this.trashName()}
+        </View>
+
+        
+       
+          <View style={styles.scores}>
+            <Text>punkty: {this.state.points} pozostało: {trashesList.length - this.state.index} pytań
+             s: {this.state.summaryArr.map(el=> {return el})} i:  s: {this.state.summaryBin.map(el=> {return el})}
+            </Text>
+            
+          </View>
+          
+     
+        {/*<View style={{width: `${(100/trashesList.length)*(this.state.index)}%`, height: 20, backgroundColor: 'red'}}></View>*/}
+  
+        
         {this.renderTrash()}
+
       </View>
       );
     } else {
-    
+      const tableHead = ['śmieć', 'do', 'dob/zle', 'pkt', 'popr'];
+      const inflection= ['metali i tworzyw', 'szkła', 'papieru', 'bio', 'mieszanych', 'innych'];
+      const tableData = [];
+      
+      const {info, points, summaryBin, summaryArr} = this.state;
+        for (let i = 0; i < trashesList.length; i++) {
+          tableData.push([inflection[summaryBin[i]], (summaryArr[i] ==='1')? 'dobrze' : 'źle', (summaryArr[i] ==='1')? '1' : '0', (summaryArr[i] ==='1')? ' ' : trashesList[i].target]);
+        }
+        
       return(<>
       <View style={styles.mainContainer}>
         <View style={styles.filler}/>
         <View style={styles.logo}>
-          <Text>Title {this.state.info}</Text></View>
-        <View style={styles.summary}><Text>wynik: {this.state.points}/{trashesList.length} pkt.</Text></View>
+          <Text>Title {info}</Text></View>
+        <View style={styles.summary}><Text>wynik: {points}/{trashesList.length} pkt.</Text></View>
         <View style={styles.again}>
-          <TouchableOpacity onPress={() => this.setState({index: 0, points: 0})}>
+          <TouchableOpacity onPress={() => this.setState({index: 0, points: 0, summaryArr: [], summaryBin: []})}>
             <View style={styles.button}>
-              <Text style={styles.buttonText}>Zagraj jeszcze raz</Text>
+              <Text style={styles.buttonText}>Zsagrdaj jeszcze raz</Text>
             </View>
           </TouchableOpacity>
+  
+          <View style={styles.container2}>
+            <Table borderStyle={{borderWidth: 1}}>
+              <Row data={tableHead} flexArr={[2, 1, 1, 1, 1]} style={styles.head2} textStyle={styles.text2}/>
+              <TableWrapper style={styles.wrapper2}>
+                <Col data={trashesList.map(el=> el.name)} style={styles.title2} heightArr={[30,30]}  textStyle={styles.text2}/>
+                <Rows data={tableData} flexArr={[1, 1, 1, 1]} style={styles.row2} textStyle={styles.text2}/>
+              </TableWrapper>
+            </Table>
+          </View>
         </View>
       </View>
       </>
@@ -193,7 +273,7 @@ export default class Viewport extends Component {
         <Animated.View
         {...this.panResponder.panHandlers}
         style={[this.state.pan.getLayout(), styles.circle]}>
-          <Text style={styles.text}>{trashesList[this.state.index].name}</Text>
+          <Icon name={trashesList[this.state.index].icon} size={40} style={styles.icon}/>
         </Animated.View>
       </View>
       )
@@ -202,7 +282,14 @@ export default class Viewport extends Component {
 }
 
 
-
+// data={[
+//   [inflection[this.state.summaryBin[0]], (this.state.summaryArr[0] ==='1')? 'dobrze' : 'źle', (this.state.summaryArr[0] ==='1')? '1' : '0', (this.state.summaryArr[0] ==='1')? ' ' : trashesList[0].target],
+//   [inflection[this.state.summaryBin[1]], (this.state.summaryArr[1] ==='1')? 'dobrze' : 'źle', (this.state.summaryArr[1] ==='1')? '1' : '0', (this.state.summaryArr[1] ==='1')? ' ' : trashesList[1].target],
+// [inflection[this.state.summaryBin[2]], (this.state.summaryArr[2] ==='1')? 'dobrze' : 'źle', (this.state.summaryArr[2] ==='1')? '1' : '0', (this.state.summaryArr[2] ==='1')? ' ' : trashesList[2].target],
+// [inflection[this.state.summaryBin[3]], (this.state.summaryArr[3] ==='1')? 'dobrze' : 'źle', (this.state.summaryArr[3] ==='1')? '1' : '0', (this.state.summaryArr[3] ==='1')? ' ' : trashesList[3].target],
+// [inflection[this.state.summaryBin[4]], (this.state.summaryArr[4] ==='1')? 'dobrze' : 'źle', (this.state.summaryArr[4] ==='1')? '1' : '0', (this.state.summaryArr[4] ==='1')? ' ' : trashesList[4].target],
+// [inflection[this.state.summaryBin[5]], (this.state.summaryArr[5] ==='1')? 'dobrze' : 'źle', (this.state.summaryArr[5] ==='1')? '1' : '0', (this.state.summaryArr[5] ==='1')? ' ' : trashesList[5].target],
+// ]}
 
 {/*<View style={styles.rodzic}>*/}
 {/*  {trashesList.map((el)=> {*/}
@@ -398,3 +485,14 @@ export default class Viewport extends Component {
 //     }
 //   }
 // }
+
+{/*<ImageBackground source={require('./img/test1.jpg')} style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_6')}>*/}
+{/*  <Text style={styles.category2} >metale i tworzywa sztuczne</Text>*/}
+{/*</ImageBackground>*/}
+
+{/*<Text style={styles.category} onLayout={this.setDropZoneValues.bind(this, 'bin_1')}>1d. Metale i tworzywa sztuczne</Text>*/}
+{/*<Text style={styles.category} onLayout={this.setDropZoneValues.bind(this, 'bin_2')}>2d.Szkło</Text>*/}
+{/*<Text style={styles.category} onLayout={this.setDropZoneValues.bind(this, 'bin_3')}>3.Papier</Text>*/}
+{/*<Text style={styles.category} onLayout={this.setDropZoneValues.bind(this, 'bin_4')}>4.Bio</Text>*/}
+{/*<Text style={styles.category} onLayout={this.setDropZoneValues.bind(this, 'bin_5')}>5.Zmieszane</Text>*/}
+{/*<Text style={styles.category} onLayout={this.setDropZoneValues.bind(this, 'bin_6')}>6.Inne (PSZOK, apteki itp.)6</Text>*/}
