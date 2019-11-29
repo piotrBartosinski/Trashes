@@ -5,7 +5,7 @@ let Window = Dimensions.get('window');
 const styles = StyleSheet.create({
 
   filler: {
-    height: 25,
+    height: 22,
     backgroundColor: 'black'
   },
   logo: {
@@ -123,15 +123,22 @@ const styles = StyleSheet.create({
     paddingRight: 5
   },
   scores: {
-    margin: 5,
+    marginTop: 15,
+    marginLeft: 5,
+    marginRight: 5,
+  
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
     backgroundColor: 'grey',
     width: 350,
     height: 60,
-    
     opacity: 0.5
+  },
+  scores2: {
+    fontSize: 20,
+    color: 'white',
+  
   },
   
   summary: {
@@ -140,32 +147,39 @@ const styles = StyleSheet.create({
     height: 40
   },
   again: {
-    backgroundColor: 'green',
-    height: 200
+    height: 500,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'white',
+    margin: 10,
+    
   },
   button: {
     marginBottom: 30,
-    height: 70,
-    width: 260,
+    height: 40,
+    width: 150,
     alignItems: 'center',
-    backgroundColor: '#2196F3'
+    backgroundColor: '#F6F6E4',
+    borderRadius: 5,
+ 
   },
   buttonText: {
     textAlign: 'center',
-    padding: 20,
-    color: 'white'
+    padding: 10,
+    color: 'black'
   },
   progress: {
     flex: 1,
     backgroundColor: 'red',
     height: 15
   },
-  container2: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: '#fff' },
-  head2: {  height: 40,  backgroundColor: '#f1f8ff'  },
-  wrapper2: { flexDirection: 'row' },
-  title2: { flex: 2, backgroundColor: '#f6f8fa' },
-  row2: {  height: 30  },
-  text2: { textAlign: 'center' }
+  tableContainer: { flex: 1, padding: 5, paddingTop: 5},
+  tableHead: {  height: 40, backgroundColor: 'white'},
+  tableWrapper: { flexDirection: 'row' },
+  tableTittle: { flex: 2,},
+  tableRow: {  height: 30  },
+  tableText: { textAlign: 'center', fontSize: 12, color: 'white'},
+  tableTextGrey: { textAlign: 'center', fontSize: 12, color: 'grey'},
   
 });
 

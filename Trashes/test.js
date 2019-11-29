@@ -16,10 +16,7 @@ import React, {Component} from "react";
 import styles from './styles/style.js';
 import trashesList from './trashes_list';
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
-
-import Icon from 'react-native-vector-icons/FontAwesome5';
-// import Icon from 'react-native-vector-icons/MaterialIcons';
-// import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 
 export default class Viewport extends Component {
@@ -58,23 +55,13 @@ export default class Viewport extends Component {
 
         for (let i=0; i <= bins.length; i++) {
           if (dropzones[i] && this.renderTrash().props.trashTarget === bins[i]) {
-            this.goodAnswer();
+            this.goodAnswer(i);
             this.animationReturn();
             this.showAgain();
-            this.setState({
-              summaryArr: this.state.summaryArr.concat('1'),
-              summaryBin: this.state.summaryBin.concat(i),
-            });
-            
           } else if (dropzones[i]  && this.renderTrash().props.trashTarget !== bins[i]) {
-            this.badAnswer();
+            this.badAnswer(i);
             this.animationReturn();
             this.showAgain();
-            this.setState({
-              summaryArr: this.state.summaryArr.concat('0'),
-              summaryBin: this.state.summaryBin.concat(i),
-            })
-            
           } else {
             Animated.spring(
             this.state.pan,
@@ -84,19 +71,23 @@ export default class Viewport extends Component {
     });
   }
   
-  goodAnswer() {
+  goodAnswer(i) {
     this.setState({
       showDraggable: false,
       index: this.state.index + 1,
       points: this.state.points + 1,
+      summaryArr: this.state.summaryArr.concat('1'),
+      summaryBin: this.state.summaryBin.concat(i),
       info: 'DOBRZE !'
     });
   }
   
-  badAnswer() {
+  badAnswer(i) {
     this.setState({
       showDraggable: false,
       index: this.state.index + 1,
+      summaryArr: this.state.summaryArr.concat('0'),
+      summaryBin: this.state.summaryBin.concat(i),
       info: 'ŹLE'
     });
   }
@@ -165,102 +156,127 @@ export default class Viewport extends Component {
     }
   }
   render() {
+    let points;
+    if (this.state.points ===1) {
+      points = 'PUNKT';
+    } else if (this.state.points === 2 || this.state.points === 3 || this.state.points === 4) {
+      points = 'PUNKTY';
+    } else {
+      points = 'PUNKTÓW'
+    }
   
     if (this.state.index < trashesList.length) {
+      let bins;
       return (<>
+      <View>
+      <ImageBackground source={require('./img/background.jpg')} style={{width: '100%', height: '100%'}}>
+    <View style={styles.filler}/>
+      <View style={styles.logo}>
+        <Image source={require('./img/logo.png')} style={{width: 305, height: 70}}/>
+      </View>
+      <View style={styles.bins}>
+      <View style={styles.bins__wrapper}>
+  
+      <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_1')}>
+      <ImageBackground source={require('./img/bins/bin_1.png')} style={styles.trashimage}/>
+    </View>
+
+    <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_2')}>
+    <ImageBackground source={require('./img/bins/bin_2.png')} style={styles.trashimage}/>
+    </View>
+
+    <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_3')}>
+    <ImageBackground source={require('./img/bins/bin_3.png')} style={styles.trashimage}/>
+    </View>
+
+    <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_4')}>
+    <ImageBackground source={require('./img/bins/bin_4.png')} style={styles.trashimage}/>
+    </View>
+
+    <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_5')}>
+    <ImageBackground source={require('./img/bins/bin_5.png')} style={styles.trashimage}/>
+    </View>
+
+    <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_6')}>
+    <ImageBackground source={require('./img/bins/bin_6.png')} style={styles.trashimage}/>
+    </View>
+
+
+    </View>
+    </View>
+    <View style={styles.place}>
+    <View>
+{/*<Icon name='indeterminate-check-box' size={20} color={'#439029'}/>*/}
+{/*      <Icon name='check-box' size={20} color={'#df4230'}/>*/}
+
+    </View>
+    <View style={styles.trash}>
+    {this.trashName()}
+    </View>
+    <View></View>
+    </View>
+
+
+
+    <View style={styles.scores}>
+    <Text style={styles.scores2}>{this.state.points} {points} | xJESZCZE {trashesList.length - this.state.index} PYTAŃ
+    {/*s: {this.state.summaryArr.map(el=> {return el})} i:  s: {this.state.summaryBin.map(el=> {return el})}*/}
+    </Text>
+
+    </View>
+
+
+    {/*<View style={{width: `${(100/trashesList.length)*(this.state.index)}%`, height: 20, backgroundColor: 'red'}}></View>*/}
+    </ImageBackground>
+
+    </View>
+    {this.renderTrash()}
+    </>
+      );
+    } else {
+      const tableHead = [' ', 'wrzuciłeś do:', ' ', 'pkt', 'poprawnie'];
+      const inflectionBin= ['metali i tworzyw', 'szkła', 'papieru', 'bio', 'zmieszanych', 'innych'];
+      const tableData = [];
+      const checkOk = <Image source={require('./img/yes.png')} style={{width: 38, height: 20}}/>;
+      const checkNot = <Image source={require('./img/no.png')} style={{width: 38, height: 20}}/>;
+      
+      const {info, points, summaryBin, summaryArr} = this.state;
+        for (let i = 0; i < trashesList.length; i++) {
+          tableData.push(
+          [inflectionBin[summaryBin[i]],
+            (summaryArr[i] ==='1')? checkOk : checkNot,
+            (summaryArr[i] ==='1')? '1' : '0',
+            (summaryArr[i] ==='1')? ' ' : trashesList[i].target]);
+        }
+        
+      return(<>
       <View>
         <ImageBackground source={require('./img/background.jpg')} style={{width: '100%', height: '100%'}}>
         <View style={styles.filler}/>
         <View style={styles.logo}>
-          <Image source={require('./img/logo.jpg')} style={{width: 350, height: 70}}/>
-          </View>
-        <View style={styles.bins}>
-          <View style={styles.bins__wrapper}>
-            
-            <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_1')}>
-              <ImageBackground source={require('./img/bins/bin_1.png')} style={styles.trashimage}/>
-            </View>
-            <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_2')}>
-              <ImageBackground source={require('./img/bins/bin_2.png')} style={styles.trashimage}/>
-              
-            </View>
-            <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_3')}>
-              <ImageBackground source={require('./img/bins/bin_3.png')} style={styles.trashimage}/>
-         
-            </View>
-            <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_4')}>
-              <ImageBackground source={require('./img/bins/bin_4.png')} style={styles.trashimage}/>
-             
-            </View>
-            <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_5')}>
-              <ImageBackground source={require('./img/bins/bin_5.png')} style={styles.trashimage}/>
-            
-            </View>
-            <View style={styles.categoryWrapper} onLayout={this.setDropZoneValues.bind(this, 'bin_6')}>
-              <ImageBackground source={require('./img/bins/bin_6.png')} style={styles.trashimage}/>
-            </View>
-          </View>
-        </View>
-          <View style={styles.place}>
-            <View></View>
-            <View style={styles.trash}>
-              {this.trashName()}
-            </View>
-            <View></View>
-          </View>
-       
-        
-       
-          <View style={styles.scores}>
-            <Text>punkty: {this.state.points} pozostało: {trashesList.length - this.state.index} pytań
-             {/*s: {this.state.summaryArr.map(el=> {return el})} i:  s: {this.state.summaryBin.map(el=> {return el})}*/}
-            </Text>
-            
-          </View>
-          
-     
-        {/*<View style={{width: `${(100/trashesList.length)*(this.state.index)}%`, height: 20, backgroundColor: 'red'}}></View>*/}
-        </ImageBackground>
-    
-      </View>
-        {this.renderTrash()}
-        </>
-      );
-    } else {
-      const tableHead = ['śmieć', 'do', 'dob/zle', 'pkt', 'popr'];
-      const inflectionBin= ['metali i tworzyw', 'szkła', 'papieru', 'bio', 'mieszanych', 'innych'];
-      const tableData = [];
-      
-      const {info, points, summaryBin, summaryArr} = this.state;
-        for (let i = 0; i < trashesList.length; i++) {
-          tableData.push([inflectionBin[summaryBin[i]], (summaryArr[i] ==='1')? 'dobrze' : 'źle', (summaryArr[i] ==='1')? '1' : '0', (summaryArr[i] ==='1')? ' ' : trashesList[i].target]);
-        }
-        
-      return(<>
-      <View style={styles.mainContainer}>
-        <View style={styles.filler}/>
-        <View style={styles.logo}>
-          <Text>Title {info}</Text></View>
-        <View style={styles.summary}><Text>wynik: {points}/{trashesList.length} pkt.</Text></View>
+          <Image source={require('./img/logo.png')} style={{width: 305, height: 70}}/></View>
         <View style={styles.again}>
-          <TouchableOpacity onPress={() => this.setState({index: 0, points: 0, summaryArr: [], summaryBin: []})}>
-            <View style={styles.button}>
-              <Text style={styles.buttonText}>Zsagrdaj jeszcze raz</Text>
-            </View>
-          </TouchableOpacity>
   
-          <View style={styles.container2}>
-            <Table borderStyle={{borderWidth: 1}}>
-              <Row data={tableHead} flexArr={[2, 1, 1, 1, 1]} style={styles.head2} textStyle={styles.text2}/>
-              <TableWrapper style={styles.wrapper2}>
-                <Col data={trashesList.map(el=> el.name)} style={styles.title2} heightArr={[30,30]}  textStyle={styles.text2}/>
-                <Rows data={tableData} flexArr={[1, 1, 1, 1]} style={styles.row2} textStyle={styles.text2}/>
+          <View style={styles.tableContainer}>
+            <Table borderStyle={{borderWidth: 0}}>
+              <Row data={tableHead} flexArr={[2, 2, 1, 1, 2]} style={styles.tableHead} textStyle={styles. tableTextGrey}/>
+              <TableWrapper style={styles.tableWrapper}>
+                <Col data={trashesList.map(el=> el.name)} style={styles.tableTittle} heightArr={[30,30]}  textStyle={styles.tableText}/>
+                <Rows data={tableData} flexArr={[2, 1, 1, 2]} style={styles.tableRow} textStyle={styles.tableText}/>
               </TableWrapper>
             </Table>
           </View>
-        </View>
+          <TouchableOpacity onPress={() => this.setState({index: 0, points: 0, summaryArr: [], summaryBin: []})}>
+            <View style={styles.button}>
+              <Text style={styles.buttonText}>Zagraj jeszcze raz</Text>
+            </View>
+          </TouchableOpacity>
+     
+        </View></ImageBackground>
       </View>
       </>
+      
+      
       )
     }
   }
@@ -272,7 +288,7 @@ export default class Viewport extends Component {
         <Animated.View
         {...this.panResponder.panHandlers}
         style={[this.state.pan.getLayout(), styles.circle]}>
-          <ImageBackground source={require('./img/trash_1.png')} style={styles.icon}/>
+          <ImageBackground source={trashesList[this.state.index].img} style={styles.icon}/>
           {/*<Image source={require('./img/trash_1.png')} style={styles.icon}/>*/}
         </Animated.View>
       </View>
