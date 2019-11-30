@@ -1,5 +1,5 @@
 import {Dimensions, StyleSheet} from 'react-native';
-
+import trashes_list from "../trashes_list";
 
 let Window = Dimensions.get('window');
 const styles = StyleSheet.create({
@@ -56,7 +56,8 @@ const styles = StyleSheet.create({
   },
   draggableContainer: {
     position    : 'absolute',
-    bottom: 135,
+    // bottom: 135,
+    bottom: Window.width/2 - 40,
     left: Window.width/2 - 40,
   
   },
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     height: 150,
     borderWidth: 1,
-    borderColor: 'white',
+    borderColor: '#FDFFE9',
     borderStyle:'solid',
     width: '40%',
     borderRadius: 7
@@ -90,9 +91,8 @@ const styles = StyleSheet.create({
   },
   trash_name: {
     borderRadius: 3,
- 
     textAlign: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#FDFFE9',
     color: '#454545',
     fontWeight: 'bold',
     marginBottom: 15,
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   scores2: {
     fontSize: 20,
-    color: 'white',
+    color: '#FDFFE9',
   
   },
   
@@ -150,14 +150,15 @@ const styles = StyleSheet.create({
     height: 500,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: 'white',
+    borderColor: '#FDFFE9',
     margin: 10,
     
   },
   button: {
-    marginBottom: 30,
-    height: 40,
-    width: 150,
+    marginTop: 5,
+    marginBottom:  Window.width/4 - 75,
+    height: 30,
+    width: '100%',
     alignItems: 'center',
     backgroundColor: '#F6F6E4',
     borderRadius: 5,
@@ -165,21 +166,44 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     textAlign: 'center',
-    padding: 10,
-    color: 'black'
+    padding: 5,
+    color: '#454545'
   },
   progress: {
     flex: 1,
     backgroundColor: 'red',
     height: 15
   },
-  tableContainer: { flex: 1, padding: 5, paddingTop: 5},
-  tableHead: {  height: 40, backgroundColor: 'white'},
+  tableContainer: { flex: 1, padding: 5, paddingTop: 2},
+  tableHead: {  height: 22},
   tableWrapper: { flexDirection: 'row' },
   tableTittle: { flex: 2,},
-  tableRow: {  height: 30  },
-  tableText: { textAlign: 'center', fontSize: 12, color: 'white'},
+  tableRow: {  height: 27,},
+  tableText: { textAlign: 'center', fontSize: 12, color: '#FDFFE9'},
   tableTextGrey: { textAlign: 'center', fontSize: 12, color: 'grey'},
+  tableHead2: {
+    backgroundColor: '#FDFFE9',
+    height: 20,
+    borderRadius: 5
+  },
+  tableHeader: {
+    backgroundColor: '#FDFFE9',
+    borderRadius: 5,
+    marginLeft: 1,
+    marginRight: 1
+
+  },
+  textHeader: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: '#454545',
+  },
+
+  textProperBin: {
+    textAlign: 'center',
+    fontSize: 12,
+    color: '#FDFFE9',
+  }
   
 });
 
